@@ -17,6 +17,10 @@ def process_log_file(filepath, is_gpu):
                 time = int(time_match.group(1))
                 key = 'gpu' if is_gpu else 'cpu'
                 data[key][mu] = time
+            else:
+                print(f"Could not find time in {filepath}")
+        else:
+            print(f"Could not find mu in {filepath}")
 
 def plot_data(data):
 
@@ -47,6 +51,8 @@ def main():
                 process_log_file(os.path.join(log_dir, filename), is_gpu=True)
             elif 'cpu' in filename:
                 process_log_file(os.path.join(log_dir, filename), is_gpu=False)
+        else:
+            print(f"Skipping {filename}. Not a log file.")
                 
     plot_data(data)
 
