@@ -225,8 +225,9 @@ void TracccGpuStandalone::run(std::vector<traccc::io::csv::cell> cells)
     traccc::measurement_collection_types::buffer measurements_cuda_buffer(
             0, *mr.host);
     measurements_cuda_buffer = ca_cuda(cells_buffer, modules_buffer);
-    ms_cuda(measurements_cuda_buffer)
-    stream.synchronize()
+    ms_cuda(measurements_cuda_buffer);
+    
+    stream.synchronize();
 
     copy(measurements_cuda_buffer, measurements_per_event_cuda)->wait();
 
