@@ -2,6 +2,7 @@ build/
 install/
 data/
 plots/
+performance/
 
 # Prerequisites
 *.d
