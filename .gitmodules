@@ -1,3 +1,6 @@
 [submodule "traccc"]
 	path = traccc
 	url = https://github.com/acts-project/traccc.git
+[submodule "performance"]
+	path = performance
+	url = https://github.com/milescb/traccc-aaS-performance
