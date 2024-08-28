@@ -40,11 +40,11 @@ or use your favorite docker application and mount the appropriate directories.
 
 ### Shared Library 
 
-To run out of the box, an installation of `traccc` and the the backend can be found at `/global/cfs/projectdirs/m3443/data/traccc-aaS/prod/ver_07032024/install`. To set up the environment, run the docker then set the following environment variables
+To run out of the box, an installation of `traccc` and the the backend can be found at `/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install`. To set up the environment, run the docker then set the following environment variables
 
 ```
 export DATADIR=/global/cfs/projectdirs/m3443/data/traccc-aaS/data
-export INSTALLDIR=/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/install
+export INSTALLDIR=/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install
 export PATH=$INSTALLDIR/bin:$PATH
 export LD_LIBRARY_PATH=$INSTALLDIR/lib:$LD_LIBRARY_PATH
 ```

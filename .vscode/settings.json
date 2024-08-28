@@ -8,15 +8,15 @@
         "-DTRACCC_USE_ROOT=FALSE"
     ],
     "cmake.parallelJobs": 20,
-    "cmake.buildDirectory": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/build",
-    "cmake.installPrefix": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/install",
+    "cmake.buildDirectory": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/build",
+    "cmake.installPrefix": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install",
     "terminal.integrated.env.linux": {
         "SOURCEDIR": "${workspaceFolder}/standalone",
-        "BUILDDIR": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/build",
-        "INSTALLDIR": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/install",
+        "BUILDDIR": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/build",
+        "INSTALLDIR": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install",
         "DATADIR": "/global/cfs/projectdirs/m3443/data/traccc-aaS/data",
-        "PATH": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/install/bin:${env:PATH}",
-        "LD_LIBRARY_PATH": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/dev/install/lib:${env:LD_LIBRARY_PATH}"
+        "PATH": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install/bin:${env:PATH}",
+        "LD_LIBRARY_PATH": "/global/cfs/projectdirs/m3443/data/traccc-aaS/software/prod/ver_08282024_traccc_v0.10.0/install/lib:${env:LD_LIBRARY_PATH}"
     },
     "files.associations": {
         "ostream": "cpp",
