@@ -287,8 +287,12 @@ private:
     traccc::device::container_d2h_copy_alg<traccc::track_state_container_types>
         m_copy_track_states;
 
+    // buffers
+    traccc::cell_collection_types::buffer cells_buffer;
+    traccc::cell_module_collection_types::buffer modules_buffer;
+
 public:
-    TracccGpuStandalone(int deviceID = 0) :
+    TracccGpuStandalone(std::vector<traccc::io::csv::cell> cells, int deviceID = 0) :
         m_device_id(deviceID), 
         m_host_mr(),
         m_stream(setCudaDeviceAndGetStream(deviceID)),
@@ -326,21 +330,21 @@ public:
                 << ", bus: " << props.pciBusID
                 << ", device: " << props.pciDeviceID << "]" << std::endl;
 
-        initialize();
+        initialize(cells);
     }
 
     // default destructor
     ~TracccGpuStandalone() = default;
 
-    void initialize();
-    void run(std::vector<traccc::io::csv::cell> cells);
-    std::vector<traccc::io::csv::cell> read_csv(const std::string &filename);
+    void initialize(std::vector<traccc::io::csv::cell> cells);
+    void run();
+    // std::vector<traccc::io::csv::cell> read_csv(const std::string &filename);
     std::vector<std::vector<double>> read_from_csv(const std::string &filename);
     std::vector<traccc::io::csv::cell> 
         read_from_array(const std::vector<std::vector<double>> &data);
 };
 
-void TracccGpuStandalone::initialize()
+void TracccGpuStandalone::initialize(std::vector<traccc::io::csv::cell> cells)
 {
     
     // HACK: hard code location of detector and digitization file
@@ -372,31 +376,27 @@ void TracccGpuStandalone::initialize()
     m_stream.synchronize();
     m_device_detector_view = detray::get_data(m_device_detector);
 
-    return;
-}
-
-void TracccGpuStandalone::run(std::vector<traccc::io::csv::cell> cells)
-{
     traccc::io::cell_reader_output read_out(m_mr.host);
 
     // Read the cells from the relevant event file into host memory.
     read_cells(read_out, cells, &m_surface_transforms, 
                 m_digi_cfg.get(), m_barcode_map.get(), true);
 
-    const traccc::cell_collection_types::host& cells_per_event =
-        read_out.cells;
-    const traccc::cell_module_collection_types::host&
-        modules_per_event = read_out.modules;
+    traccc::cell_collection_types::host& cells_per_event = read_out.cells;
+    traccc::cell_module_collection_types::host& modules_per_event = read_out.modules;
 
     // create buffers and copy to device
     // Create device copy of input collections
-    traccc::cell_collection_types::buffer cells_buffer(
-        cells_per_event.size(), *m_cached_device_mr);
+    cells_buffer = vecmem::data::vector_buffer<traccc::cell>(cells_per_event.size(), *m_cached_device_mr);
     m_copy(vecmem::get_data(cells_per_event), cells_buffer)->ignore();
-    traccc::cell_module_collection_types::buffer modules_buffer(
-        modules_per_event.size(), *m_cached_device_mr);
+    modules_buffer = vecmem::data::vector_buffer<traccc::cell_module>(modules_per_event.size(), *m_cached_device_mr);
     m_copy(vecmem::get_data(modules_per_event), modules_buffer)->ignore();
 
+    return;
+}
+
+void TracccGpuStandalone::run()
+{
     //
     // ----------------- Clusterization -----------------
     // 
@@ -470,7 +470,7 @@ void TracccGpuStandalone::run(std::vector<traccc::io::csv::cell> cells)
 
 // deal with input data
 
-std::vector<traccc::io::csv::cell> TracccGpuStandalone::read_csv(const std::string &filename)
+std::vector<traccc::io::csv::cell> read_csv(const std::string &filename)
 {
     std::vector<traccc::io::csv::cell> cells;
     auto reader = traccc::io::csv::make_cell_reader(filename);

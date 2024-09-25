@@ -27,7 +27,7 @@ def main():
     print("Sending request to batching model: input = {}".format(input0_data))
     inputs = [httpclient.InferInput("FEATURES", input0_data.shape, "FP64")]
     inputs[0].set_data_from_numpy(input0_data)
-    async_requests.append(triton_client.async_infer(f"traccc-{FLAGS.architecture}", inputs))
+    async_requests.append(triton_client.async_infer(f"traccc-gpu", inputs))
 
     for async_request in async_requests:
         # Get the result from the initiated asynchronous inference
@@ -53,14 +53,6 @@ if __name__ == "__main__":
         required=False,
         default="event000000000-cells.csv",
         help="Input file name. Default is event000000000-cells.csv.",
-    )
-    parser.add_argument(
-        "-a",
-        "--architecture",
-        type=str,
-        required=False,
-        default="gpu",
-        help="Model architecture. Default is gpu.",
     )
     FLAGS = parser.parse_args()
 

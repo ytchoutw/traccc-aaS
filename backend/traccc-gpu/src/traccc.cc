@@ -394,7 +394,7 @@ class ModelInstanceState : public BackendModelInstance {
   // define standalone object
   std::unique_ptr<TracccGpuStandalone> traccc_gpu_standalone_;
   // define cells
-  std::vector<traccc::io::csv::cell> cells_;
+//   std::vector<traccc::io::csv::cell> cells_;
 
  private:
   ModelInstanceState(
@@ -460,12 +460,12 @@ TRITONBACKEND_ModelInstanceInitialize(TRITONBACKEND_ModelInstance* instance)
             ("Failed to set CUDA device: " + std::string(cudaGetErrorString(err))).c_str());
     }
 
-    instance_state->traccc_gpu_standalone_ = std::make_unique<TracccGpuStandalone>(instance_state->DeviceId());
-
     // MARK: HACK to load data in server initialization
     // load the data
     std::string input_file = "/global/cfs/projectdirs/m3443/data/traccc-aaS/data_odd_ttbar_large/geant4_ttbar_mu200/event000000000-cells.csv";
-    instance_state->cells_ = instance_state->traccc_gpu_standalone_->read_csv(input_file);
+    std::vector<traccc::io::csv::cell> cells_ = read_csv(input_file);
+
+    instance_state->traccc_gpu_standalone_ = std::make_unique<TracccGpuStandalone>(cells_, instance_state->DeviceId());
 
     return nullptr;  // success
 }
@@ -675,8 +675,8 @@ TRITONBACKEND_ModelInstanceExecute(
     //     std::cout << std::endl;
     // }
     // MARK: Run the pipeline
-    const std::vector<traccc::io::csv::cell>& cells = instance_state->cells_;
-    instance_state->traccc_gpu_standalone_->run(cells);
+    // const std::vector<traccc::io::csv::cell>& cells = instance_state->cells_;
+    instance_state->traccc_gpu_standalone_->run();
 
     std::vector<int64_t> output_data(
         1, -1); // Initialized all to -1

@@ -15,21 +15,21 @@ int main(int argc, char *argv[])
     std::cout << "Running " << argv[0] << " on " << event_file << std::endl;
 
     int deviceID = std::stoi(argv[2]);
-    TracccGpuStandalone standalone(deviceID);
-    auto cells = standalone.read_csv(event_file);
+    auto cells = read_csv(event_file);
+    TracccGpuStandalone standalone(cells, deviceID);
 
     std::vector<double> timeProcessOneEvent;
 
     // warm up
     for (int i = 0; i < 10; i++)
     {
-        standalone.run(cells);
+        standalone.run();
     }
 
     for (int i = 0; i < 100; i++)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        standalone.run(cells);
+        standalone.run();
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
         timeProcessOneEvent.push_back(duration.count());
